@@ -1,22 +1,26 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { Link } from 'react-router-dom'
 
 import Bookshelve from './bookshelve'
+import { Loading } from './../../../components'
 
-const ListBooks = ({ currentlyReading, wantToRead, read, handleMoveBook }) => (
+const ListBooks = ({ isFetching, currentlyReading, wantToRead, read, handleMoveBook }) => (
   <div className="list-books">
+    <Loading show={isFetching} />
+
     <div className="list-books-title">
       <h1>MyReads</h1>
     </div>
     <div className="list-books-content">
       <div>
-        <Bookshelve title="Currently reading" books={currentlyReading} handleMoveBook={handleMoveBook}/>
-        <Bookshelve title="Want to read" books={wantToRead} handleMoveBook={handleMoveBook}/>
-        <Bookshelve title="Read" books={read} handleMoveBook={handleMoveBook}/>
+        <Bookshelve title="Currently reading" books={currentlyReading} handleMoveBook={handleMoveBook} />
+        <Bookshelve title="Want to read" books={wantToRead} handleMoveBook={handleMoveBook} />
+        <Bookshelve title="Read" books={read} handleMoveBook={handleMoveBook} />
       </div>
     </div>
     <div className="open-search">
-      <a onClick={() => this.setState({showSearchPage: true})}>Add a book</a>
+      <Link to="/pesquisa">Add a book</Link>
     </div>
   </div>
 )

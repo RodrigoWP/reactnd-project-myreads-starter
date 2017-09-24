@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-import { getAll, update } from '../../utils/api'
+import { getAll, update, search } from '../../utils/api'
 import Search from './search'
 import ListBooks from './list-books'
-import { Loading } from './../../components'
 
 const CURRENTLY_READING = 'currentlyReading'
 const WANT_TO_READ = 'wantToRead'
@@ -14,11 +14,11 @@ class Books extends Component {
     super()
 
     this.state = {
-      showSearchPage: false,
       isFetching: false,
       currentlyReading: [],
       wantToRead: [],
-      read: []
+      read: [],
+      books: []
     }
   }
 
@@ -45,10 +45,6 @@ class Books extends Component {
     }).then(this.toggleLoading)
   }
 
-  closeSearch = () => {
-    this.setState({ showSearchPage: false })
-  }
-
   updateShelfBook = (book, shelf) => {
     this.toggleLoading()
 
@@ -57,21 +53,46 @@ class Books extends Component {
       .then(this.toggleLoading)
   }
 
-  render() {
-    const { showSearchPage, isFetching } = this.state
+  _handleSearch = (value) => {
+    clearTimeout(this.searchTmo)
 
+    this.searchTmo = setTimeout(() => this.searchBooks(value), 1000)
+  }
+
+  processData = (data) => {
+    this.setState({
+      books: !!data && !data.error ? data : []
+    })
+  }
+
+  searchBooks = (searchValue) => {
+    this.toggleLoading()
+
+    search(searchValue)
+      .then((data) => this.processData(data))
+      .then(this.toggleLoading)
+  }
+
+  render() {
     return (
       <div className="app">
-        <Loading show={isFetching} />
-
-        {showSearchPage ? (
-          <Search handleClose={this.closeSearch} />
-        ) : (
-          <ListBooks
-            {...this.state}
-            handleMoveBook={this.updateShelfBook}
-          />
-        )}
+        <Router>
+          <Switch>
+            <Route exact path='/' render={() => (
+              <ListBooks
+                {...this.state}
+                handleMoveBook={this.updateShelfBook}
+              />
+            )} />
+            <Route path="/pesquisa" render={() => (
+              <Search
+                {...this.state}
+                handleMoveBook={this.updateShelfBook}
+                handleSearch={this._handleSearch}
+              />
+            )} />
+          </Switch>
+        </Router>
       </div>
     )
   }

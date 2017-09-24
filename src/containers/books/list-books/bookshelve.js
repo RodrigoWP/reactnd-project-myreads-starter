@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Book from './book'
+import Book from '../../../components/book'
 
 const Bookshelve = ({ title, books, handleMoveBook }) => (
   <div className="bookshelf">

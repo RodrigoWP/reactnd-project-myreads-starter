@@ -1,31 +1,37 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import { withRouter } from 'react-router-dom'
 
-const Search = ({ handleClose }) => (
+import Book from '../../../components/book'
+import { Loading } from './../../../components'
+
+const Search = ({ history, books = [], isFetching, handleSearch, handleMoveBook }) => (
     <div className="search-books">
-        <div className="search-books-bar">
-            <a className="close-search" onClick={handleClose}>Close</a>
+      <Loading show={isFetching} />
+
+      <div className="search-books-bar">
+            <a className="close-search" onClick={history.goBack}>Close</a>
             <div className="search-books-input-wrapper">
-                {/*
-                  NOTES: The search from BooksAPI is limited to a particular set of search terms.
-                  You can find these search terms here:
-                  https://github.com/udacity/reactnd-project-myreads-starter/blob/master/SEARCH_TERMS.md
-
-                  However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
-                  you don't find a specific author or title. Every search is limited by search terms.
-                */}
-                <input type="text" placeholder="Search by title or author"/>
-
+                <input
+                  type="text"
+                  placeholder="Search by title or author"
+                  onChange={(e) => handleSearch(e.target.value)}
+                />
             </div>
         </div>
         <div className="search-books-results">
-            <ol className="books-grid"></ol>
+            <ol className="books-grid">
+              {books.map((book, index) => (
+                <li key={index}>
+                  <Book book={book} handleUpdate={handleMoveBook}/>
+                </li>
+              ))}
+            </ol>
         </div>
     </div>
 )
 
-Search.propTypes = {
-    handleClose: PropTypes.func.isRequired
+Search.defaultProps = {
+  books: []
 }
 
-export default Search
+export default withRouter(Search)
