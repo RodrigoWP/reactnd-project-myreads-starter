@@ -3,14 +3,14 @@ import PropTypes from 'prop-types'
 
 import Book from './book'
 
-const Bookshelve = ({ title, books }) => (
+const Bookshelve = ({ title, books, handleMoveBook }) => (
   <div className="bookshelf">
     <h2 className="bookshelf-title">{title}</h2>
     <div className="bookshelf-books">
       <ol className="books-grid">
         {books.map((book, index) => (
-          <li>
-            <Book key={index} book={book} />
+          <li key={index}>
+            <Book book={book} handleUpdate={handleMoveBook}/>
           </li>
         ))}
       </ol>

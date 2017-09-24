@@ -1,4 +1,3 @@
-import Search from './search'
-import ListBooks from './list-books'
+import Loading from './loading'
 
-export { Search, ListBooks }
+export { Loading }
