@@ -16,9 +16,7 @@ class Books extends PureComponent {
 
     this.state = {
       isFetching: false,
-      currentlyReading: [],
-      wantToRead: [],
-      read: []
+      books: []
     }
   }
 
@@ -38,9 +36,7 @@ class Books extends PureComponent {
     getAll()
       .then((data) => {
       this.setState({
-        currentlyReading: data.filter(book => book.shelf === CURRENTLY_READING),
-        wantToRead: data.filter(book => book.shelf === WANT_TO_READ),
-        read: data.filter(book => book.shelf === READ)
+        books: data
       })
     }).then(this.toggleLoading)
   }
@@ -54,13 +50,16 @@ class Books extends PureComponent {
   }
 
   render() {
+    const { books, isFetching } = this.state
+
     return (
       <div className="app">
         <Router>
           <Switch>
             <Route exact path='/' render={() => (
               <ListBooks
-                {...this.state}
+                books={books}
+                isFetching={isFetching}
                 updateShelfBook={this._updateShelfBook}
               />
             )} />

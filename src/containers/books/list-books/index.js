@@ -5,7 +5,22 @@ import { Link } from 'react-router-dom'
 import Bookshelve from './bookshelve'
 import { Loading } from './../../../components'
 
-const ListBooks = ({ isFetching, currentlyReading, wantToRead, read, updateShelfBook }) => (
+const shelf = [
+  {
+    title: 'Currently reading',
+    key: 'currentlyReading'
+  },
+  {
+    title: 'Want to read',
+    key: 'wantToRead'
+  },
+  {
+    title: 'Read',
+    key: 'read'
+  }
+]
+
+const ListBooks = ({ isFetching, books, updateShelfBook }) => (
   <div className="list-books">
     <Loading show={isFetching} />
 
@@ -13,11 +28,14 @@ const ListBooks = ({ isFetching, currentlyReading, wantToRead, read, updateShelf
       <h1>MyReads</h1>
     </div>
     <div className="list-books-content">
-      <div>
-        <Bookshelve title="Currently reading" books={currentlyReading} updateShelfBook={updateShelfBook} />
-        <Bookshelve title="Want to read" books={wantToRead} updateShelfBook={updateShelfBook} />
-        <Bookshelve title="Read" books={read} updateShelfBook={updateShelfBook} />
-      </div>
+      {shelf.map(item => (
+        <Bookshelve
+          key={item.key}
+          title={item.title}
+          books={books.filter(book => book.shelf === item.key)}
+          updateShelfBook={updateShelfBook}
+        />
+      ))}
     </div>
     <div className="open-search">
       <Link to="/pesquisa">Add a book</Link>
@@ -26,9 +44,7 @@ const ListBooks = ({ isFetching, currentlyReading, wantToRead, read, updateShelf
 )
 
 ListBooks.propTypes = {
-  currentlyReading : PropTypes.array.isRequired,
-  wantToRead: PropTypes.array.isRequired,
-  read: PropTypes.array.isRequired
+  books: PropTypes.array.isRequired
 }
 
 export default ListBooks
