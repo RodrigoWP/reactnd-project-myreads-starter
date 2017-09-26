@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import Bookshelve from './bookshelve'
 import { Loading } from './../../../components'
 
-const ListBooks = ({ isFetching, currentlyReading, wantToRead, read, handleMoveBook }) => (
+const ListBooks = ({ isFetching, currentlyReading, wantToRead, read, updateShelfBook }) => (
   <div className="list-books">
     <Loading show={isFetching} />
 
@@ -14,9 +14,9 @@ const ListBooks = ({ isFetching, currentlyReading, wantToRead, read, handleMoveB
     </div>
     <div className="list-books-content">
       <div>
-        <Bookshelve title="Currently reading" books={currentlyReading} handleMoveBook={handleMoveBook} />
-        <Bookshelve title="Want to read" books={wantToRead} handleMoveBook={handleMoveBook} />
-        <Bookshelve title="Read" books={read} handleMoveBook={handleMoveBook} />
+        <Bookshelve title="Currently reading" books={currentlyReading} updateShelfBook={updateShelfBook} />
+        <Bookshelve title="Want to read" books={wantToRead} updateShelfBook={updateShelfBook} />
+        <Bookshelve title="Read" books={read} updateShelfBook={updateShelfBook} />
       </div>
     </div>
     <div className="open-search">

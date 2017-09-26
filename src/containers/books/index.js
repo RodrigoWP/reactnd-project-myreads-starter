@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
-import { getAll, update, search } from '../../utils/api'
+import { getAll, update } from '../../utils/api'
+
 import Search from './search'
 import ListBooks from './list-books'
 
@@ -9,7 +10,7 @@ const CURRENTLY_READING = 'currentlyReading'
 const WANT_TO_READ = 'wantToRead'
 const READ = 'read'
 
-class Books extends Component {
+class Books extends PureComponent {
   constructor(){
     super()
 
@@ -17,8 +18,7 @@ class Books extends Component {
       isFetching: false,
       currentlyReading: [],
       wantToRead: [],
-      read: [],
-      books: []
+      read: []
     }
   }
 
@@ -45,31 +45,11 @@ class Books extends Component {
     }).then(this.toggleLoading)
   }
 
-  updateShelfBook = (book, shelf) => {
+  _updateShelfBook = (book, shelf) => {
     this.toggleLoading()
 
     update(book, shelf)
       .then(this.loadBooks)
-      .then(this.toggleLoading)
-  }
-
-  _handleSearch = (value) => {
-    clearTimeout(this.searchTmo)
-
-    this.searchTmo = setTimeout(() => this.searchBooks(value), 1000)
-  }
-
-  processData = (data) => {
-    this.setState({
-      books: !!data && !data.error ? data : []
-    })
-  }
-
-  searchBooks = (searchValue) => {
-    this.toggleLoading()
-
-    search(searchValue)
-      .then((data) => this.processData(data))
       .then(this.toggleLoading)
   }
 
@@ -81,16 +61,12 @@ class Books extends Component {
             <Route exact path='/' render={() => (
               <ListBooks
                 {...this.state}
-                handleMoveBook={this.updateShelfBook}
+                updateShelfBook={this._updateShelfBook}
               />
             )} />
             <Route path="/pesquisa" render={() => (
-              <Search
-                {...this.state}
-                handleMoveBook={this.updateShelfBook}
-                handleSearch={this._handleSearch}
-              />
-            )} />
+              <Search updateShelfBook={this._updateShelfBook} />
+              )} />
           </Switch>
         </Router>
       </div>

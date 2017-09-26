@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const Book = ({ book, handleUpdate }) => (
+const Book = ({ book, updateShelfBook }) => (
   <div className="book">
     <div className="book-top">
       <div className="book-cover" style={{ backgroundImage: `url(${book.imageLinks.thumbnail})`}} />
       <div className="book-shelf-changer">
-        <select value={book.shelf} onChange={(e) => handleUpdate(book , e.target.value)}>
+        <select value={book.shelf} onChange={(e) => updateShelfBook(book , e.target.value)}>
           <option value="none" disabled>Move to...</option>
           <option value="currentlyReading">Currently Reading</option>
           <option value="wantToRead">Want to Read</option>
@@ -28,7 +28,7 @@ Book.propTypes = {
     title: PropTypes.string.isRequired,
     subtitle: PropTypes.string
   }).isRequired,
-  handleUpdate: PropTypes.func.isRequired
+  updateShelfBook: PropTypes.func.isRequired
 }
 
 export default Book
