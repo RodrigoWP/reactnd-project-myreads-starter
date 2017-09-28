@@ -6,7 +6,7 @@ const Book = ({ book, updateShelfBook }) => (
     <div className="book-top">
       <div className="book-cover" style={{ backgroundImage: `url(${book.imageLinks.thumbnail})`}} />
       <div className="book-shelf-changer">
-        <select value={book.shelf} onChange={(e) => updateShelfBook(book , e.target.value)}>
+        <select value={book.shelf || "none"} onChange={(e) => updateShelfBook(book , e.target.value)}>
           <option value="none" disabled>Move to...</option>
           <option value="currentlyReading">Currently Reading</option>
           <option value="wantToRead">Want to Read</option>

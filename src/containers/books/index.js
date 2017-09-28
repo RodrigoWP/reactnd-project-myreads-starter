@@ -1,14 +1,13 @@
 import React, { PureComponent } from 'react'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import Alert from 'alertify.js'
 
 import { getAll, update } from '../../utils/api'
 
+import { Loading } from './../../components'
+
 import Search from './search'
 import ListBooks from './list-books'
-
-const CURRENTLY_READING = 'currentlyReading'
-const WANT_TO_READ = 'wantToRead'
-const READ = 'read'
 
 class Books extends PureComponent {
   constructor(){
@@ -16,7 +15,8 @@ class Books extends PureComponent {
 
     this.state = {
       isFetching: false,
-      books: []
+      books: [],
+      isLoading: false
     }
   }
 
@@ -24,47 +24,54 @@ class Books extends PureComponent {
     this.loadBooks()
   }
 
-  toggleLoading = () => {
+  startLoading = () => {
     this.setState({
-      isFetching: !this.state.isFetching
+      isLoading: true
+    })
+  }
+
+  hideLoading = () => {
+    this.setState({
+      isLoading: false
     })
   }
 
   loadBooks = () => {
-    this.toggleLoading()
+    this.startLoading()
 
     getAll()
       .then((data) => {
       this.setState({
         books: data
       })
-    }).then(this.toggleLoading)
+    }).then(this.hideLoading)
   }
 
   _updateShelfBook = (book, shelf) => {
-    this.toggleLoading()
+    this.startLoading()
 
     update(book, shelf)
       .then(this.loadBooks)
-      .then(this.toggleLoading)
+      .then(() => Alert.success(`O livro <strong>${book.title}</strong> foi adicionado a <strong>${shelf}</strong>`))
   }
 
   render() {
-    const { books, isFetching } = this.state
+    const { books, isLoading } = this.state
 
     return (
       <div className="app">
+        <Loading show={isLoading} />
         <Router>
           <Switch>
             <Route exact path='/' render={() => (
               <ListBooks
                 books={books}
-                isFetching={isFetching}
+                isFetching={isLoading}
                 updateShelfBook={this._updateShelfBook}
               />
             )} />
             <Route path="/pesquisa" render={() => (
-              <Search updateShelfBook={this._updateShelfBook} />
+              <Search myBooks={books} updateShelfBook={this._updateShelfBook} />
               )} />
           </Switch>
         </Router>

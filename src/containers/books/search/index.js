@@ -37,8 +37,20 @@ class Search extends Component {
   }
 
   processData = (data) => {
+    let newData = []
+
+    if(!!data && !data.error){
+      const { myBooks } = this.props
+
+      newData = data.map(book => {
+        const newBook = myBooks.find(shelfBook => shelfBook.title === book.title)
+
+        return newBook || book
+      })
+    }
+
     this.setState({
-      books: !!data && !data.error ? data : []
+      books: newData
     })
   }
 
@@ -85,8 +97,6 @@ class Search extends Component {
         <div className="search-books-results">
           <ol className="books-grid">
             {books.map((book, index) => {
-              console.log(book.shelf)
-
               return (
                 <li key={index}>
                   <Book book={book} updateShelfBook={updateShelfBook}/>
@@ -101,7 +111,12 @@ class Search extends Component {
 }
 
 Search.propTypes = {
+  myBooks: PropTypes.array,
   updateShelfBook: PropTypes.func.isRequired
+}
+
+Search.defaultProps = {
+  myBooks: []
 }
 
 export default withRouter(Search)
