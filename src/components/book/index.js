@@ -1,10 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+const bookImage = (image) => (
+  image ? image.thumbnail : `${process.env.PUBLIC_URL}/no-image-found.jpg`
+)
+
 const Book = ({ book, updateShelfBook }) => (
   <div className="book">
     <div className="book-top">
-      <div className="book-cover" style={{ backgroundImage: `url(${book.imageLinks.thumbnail})`}} />
+      <div className="book-cover" style={{
+        backgroundImage: `url(${bookImage(book.imageLinks)})`,
+      }} />
       <div className="book-shelf-changer">
         <select value={book.shelf || "none"} onChange={(e) => updateShelfBook(book , e.target.value)}>
           <option value="none" disabled>Move to...</option>
@@ -23,7 +29,7 @@ const Book = ({ book, updateShelfBook }) => (
 Book.propTypes = {
   book: PropTypes.shape({
     imageLinks: PropTypes.shape({
-      thumbnail: PropTypes.string.isRequired
+      thumbnail: PropTypes.string
     }),
     title: PropTypes.string.isRequired,
     subtitle: PropTypes.string
