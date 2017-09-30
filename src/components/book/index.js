@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const bookImage = (image) => (
+export const bookImage = (image) => (
   image ? image.thumbnail : `${process.env.PUBLIC_URL}/no-image-found.jpg`
 )
 
